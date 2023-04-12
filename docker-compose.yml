@@ -35,6 +35,18 @@ services:
       - ./data/nginx:/data
       - ./data/letsencrypt:/etc/letsencrypt
 
+  postgres:
+    image: timescale/timescaledb-ha:pg15-latest
+    container_name: postgres
+    hostname: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data/postgres-data:/var/lib/postgresql/data
+
 networks:
 
   default:
