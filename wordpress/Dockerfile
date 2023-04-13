@@ -16,20 +16,30 @@ RUN add-apt-repository ppa:ondrej/php \
     php php-curl php-dev php-intl php-mbstring php-mysql php-pear php-xdebug php-xml php-zip \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_19.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy configuration files
 COPY config/ /
 
 # Configure Apache2
 RUN set -ex \
     && . /etc/apache2/envvars \
-    && a2enconf fqdn conf-extra \
+    && a2enconf conf-extra fqdn mjs robots \
     && a2enmod expires headers remoteip rewrite vhost_alias \
     && a2ensite vhosts \
     && sed -e '/Options Indexes FollowSymLinks/ s/^#*/#/' -i /etc/apache2/apache2.conf \
     && rm /etc/apache2/sites-available/default-ssl.conf \
     && ln -sfT /dev/stderr "${APACHE_LOG_DIR}/error.log" \
     && ln -sfT /dev/stdout "${APACHE_LOG_DIR}/access.log" \
+    && chsh --shell /bin/bash www-data \
     && apache2ctl graceful
+
+# Configure Node.js
+RUN npm install -g \
+    pnpm yarn
 
 # Configure PHP
 RUN phpenmod xdebug
@@ -40,5 +50,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && chmod +x /usr/local/bin/wp
 
 VOLUME ["/etc/apache2/conf-extra","/var/www/html","/tmp"]
-
+WORKDIR /var/www
+EXPOSE 80
 CMD ["/docker-entrypoint.sh"]
