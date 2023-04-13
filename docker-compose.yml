@@ -48,7 +48,7 @@ services:
       - ./data/postgres-data:/var/lib/postgresql/data
 
   wordpress:
-    build: ./wordpress
+    build: ./src/wordpress
     container_name: wordpress
     hostname: wordpress
     environment:
