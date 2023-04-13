@@ -3,7 +3,7 @@ LABEL maintainer "Pascal Martineau <pascal@websimple.com>"
 
 # Install packages
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    apache2 \
+    apache2 vlogger \
     apt-transport-https build-essential ca-certificates gnupg software-properties-common \
     curl git less nano openssh-client rsync wget \
     language-pack-fr-base tzdata \
@@ -29,11 +29,10 @@ RUN set -ex \
     && . /etc/apache2/envvars \
     && a2enconf conf-extra fqdn mjs robots \
     && a2enmod expires headers remoteip rewrite vhost_alias \
+    && a2disconf other-vhosts-access-log \
     && a2ensite vhosts \
+    && a2dissite 000-default default-ssl \
     && sed -e '/Options Indexes FollowSymLinks/ s/^#*/#/' -i /etc/apache2/apache2.conf \
-    && rm /etc/apache2/sites-available/default-ssl.conf \
-    && ln -sfT /dev/stderr "${APACHE_LOG_DIR}/error.log" \
-    && ln -sfT /dev/stdout "${APACHE_LOG_DIR}/access.log" \
     && chsh --shell /bin/bash www-data \
     && apache2ctl graceful
 
@@ -49,7 +48,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && curl -sS https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp \
     && chmod +x /usr/local/bin/wp
 
-VOLUME ["/etc/apache2/conf-extra","/var/www/html","/tmp"]
+VOLUME ["/etc/apache2/conf-extra","/var/www/html","/var/log/apache2","/tmp"]
 WORKDIR /var/www
 EXPOSE 80
 CMD ["/docker-entrypoint.sh"]
