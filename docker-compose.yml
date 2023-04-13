@@ -21,7 +21,7 @@ services:
     hostname: nginx
     restart: unless-stopped
     depends_on:
-      - mariadb      
+      - mariadb
     environment:
       - DB_MYSQL_HOST=mariadb
       - DB_MYSQL_NAME=${NGINX_MYSQL_NAME}
@@ -46,6 +46,17 @@ services:
       - '5432:5432'
     volumes:
       - ./data/postgres-data:/var/lib/postgresql/data
+
+  wordpress:
+    build: ./wordpress
+    container_name: wordpress
+    hostname: wordpress
+    environment:
+      - APACHE2_TLD=${APACHE2_TLD-local}
+    volumes:
+      - ./data/wordpress-config:/etc/apache2/conf-extra
+      - ./data/wordpress-html:/var/www/html
+      - ./data/wordpress-tmp:/tmp
 
 networks:
 
