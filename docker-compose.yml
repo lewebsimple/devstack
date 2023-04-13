@@ -2,6 +2,12 @@ version: '3'
 
 services:
 
+  horcrux:
+    build: ./src/horcrux
+    container_name: horcrux
+    hostname: horcrux
+    restart: unless-stopped
+
   mariadb:
     image: mariadb:latest
     container_name: mariadb
@@ -51,6 +57,7 @@ services:
     build: ./src/wordpress
     container_name: wordpress
     hostname: wordpress
+    restart: unless-stopped
     environment:
       - APACHE2_TLD=${APACHE2_TLD-local}
     volumes:
