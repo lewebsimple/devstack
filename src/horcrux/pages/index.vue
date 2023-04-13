@@ -1,9 +1,11 @@
 <script setup lang="ts">
-
+// SEO
+useSeoMeta({ title: "Home" });
+useSchemaOrg([defineWebPage()]);
 </script>
 
 <template>
   <div id="home">
-    <h1>Horcrux</h1>
+    <ThePageHeader title="Welcome!" />
   </div>
 </template>
