@@ -36,7 +36,7 @@ services:
       - ./data/letsencrypt:/etc/letsencrypt
 
   postgres:
-    image: timescale/timescaledb-ha:pg15-latest
+    image: postgres:latest
     container_name: postgres
     hostname: postgres
     restart: unless-stopped
