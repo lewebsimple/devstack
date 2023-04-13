@@ -6,6 +6,6 @@ useSchemaOrg([defineWebPage()]);
 
 <template>
   <div id="home">
-    <ThePageHeader title="Welcome!" />
+    <ThePageHeader title="Welcome to Horcrux!" />
   </div>
 </template>

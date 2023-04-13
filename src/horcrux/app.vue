@@ -5,7 +5,7 @@ useSchemaOrg([
     name: "Websimple",
     "@type": "Organization",
   }),
-  defineWebSite({ name: "Nuxt boilerplate" }),
+  defineWebSite({ name: "Horcrux" }),
 ]);
 </script>
 

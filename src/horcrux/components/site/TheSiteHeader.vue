@@ -2,6 +2,8 @@
 
 <template>
   <div id="site-header" class="container py-3 flex items-center gap-6">
-    <NuxtLink to="/"><SvgLogoNuxt class="w-12 h-12" /></NuxtLink>
+    <NuxtLink to="/">
+      <SvgLogoHorcrux class="w-12 h-12" />
+    </NuxtLink>
   </div>
 </template>

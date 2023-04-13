@@ -22,8 +22,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      siteName: "Nuxt boilerplate",
-      siteDescription: "Welcome to Nuxt boilerplate",
+      siteName: "Horcrux",
+      siteDescription: "Horcrux is a collection of tools for web agencies",
       siteUrl: "http://localhost:3000",
     },
   },
