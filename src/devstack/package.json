@@ -7,7 +7,7 @@
     "generate": "nuxt generate",
     "lint": "eslint --fix . && stylelint --fix \"**/*.{css,scss,vue}\"",
     "preview": "nuxt preview",
-    "prepare": "nuxt prepare"
+    "prepare": "nuxt prepare && prisma generate"
   },
   "prisma": {
     "schema": "server/prisma/schema.prisma"
