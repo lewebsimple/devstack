@@ -3,12 +3,14 @@ FROM node:19-alpine as base
 LABEL maintainer "Pascal Martineau <pascal@websimple.com>"
 
 WORKDIR /app
+RUN apk add --no-cache bash
 RUN npm i -g pnpm
 
 ### Dependencies
 FROM base AS dependencies
 
 COPY package.json pnpm-lock.yaml .npmrc ./
+COPY server/prisma/schema.prisma ./server/prisma/
 RUN pnpm install
 
 ### Build
@@ -24,11 +26,13 @@ RUN pnpm prune --prod --config.ignore-scripts=true
 FROM base AS deploy
 
 COPY --from=build /app/.output/ ./.output/
-#COPY --from=builder /app/node_modules/.prisma/client/ node_modules/.prisma/client
+COPY --from=build /app/node_modules/ ./node_modules/
+COPY docker-entrypoint.sh package.json ./
+COPY server/prisma/ ./server/prisma/
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
 
 EXPOSE 3000
 
-ENTRYPOINT [ "node", ".output/server/index.mjs" ]
+CMD ["/app/docker-entrypoint.sh"]
