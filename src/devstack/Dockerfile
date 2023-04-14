@@ -24,6 +24,7 @@ RUN pnpm prune --prod --config.ignore-scripts=true
 FROM base AS deploy
 
 COPY --from=build /app/.output/ ./.output/
+#COPY --from=builder /app/node_modules/.prisma/client/ node_modules/.prisma/client
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
