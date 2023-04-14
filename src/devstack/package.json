@@ -1,5 +1,5 @@
 {
-  "name": "@lewebsimple/horcrux",
+  "name": "@lewebsimple/devstack",
   "private": true,
   "scripts": {
     "build": "nuxt build",

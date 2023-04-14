@@ -5,7 +5,7 @@ useSchemaOrg([
     name: "Websimple",
     "@type": "Organization",
   }),
-  defineWebSite({ name: "Horcrux" }),
+  defineWebSite({ name: "DevStack" }),
 ]);
 </script>
 

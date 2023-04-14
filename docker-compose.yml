@@ -2,10 +2,10 @@ version: '3'
 
 services:
 
-  horcrux:
-    build: ./src/horcrux
-    container_name: horcrux
-    hostname: horcrux
+  devstack:
+    build: ./src/devstack
+    container_name: devstack
+    hostname: devstack
     restart: unless-stopped
 
   mariadb:
