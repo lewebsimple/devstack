@@ -7,8 +7,11 @@ services:
     container_name: devstack
     hostname: devstack
     restart: unless-stopped
+    depends_on:
+      - mariadb
     environment:
       - DATABASE_URL=mysql://${DEVSTACK_MYSQL_USER}:${DEVSTACK_MYSQL_PASSWORD}@mariadb:3306/${DEVSTACK_MYSQL_NAME}
+      - VIRTUAL_HOST=devstack.${TLD-local}
 
   mariadb:
     image: mariadb:latest
@@ -24,24 +27,18 @@ services:
       - ./data/mariadb-data:/var/lib/mysql
 
   nginx:
-    image: jc21/nginx-proxy-manager:latest
+    image: jwilder/nginx-proxy
     container_name: nginx
-    hostname: nginx
     restart: unless-stopped
-    depends_on:
-      - mariadb
-    environment:
-      - DB_MYSQL_HOST=mariadb
-      - DB_MYSQL_NAME=${NGINX_MYSQL_NAME}
-      - DB_MYSQL_USER=${NGINX_MYSQL_USER}
-      - DB_MYSQL_PASSWORD=${NGINX_MYSQL_PASSWORD}
     ports:
       - '80:80'
-      - '81:81'
       - '443:443'
     volumes:
-      - ./data/nginx:/data
-      - ./data/letsencrypt:/etc/letsencrypt
+      - ./data/nginx-certs:/etc/nginx/certs:ro
+      - ./data/nginx-config:/etc/nginx/conf.d
+      - ./data/nginx-html:/usr/share/nginx/html
+      - ./data/nginx-vhosts:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
   postgres:
     image: postgres:latest
@@ -60,8 +57,11 @@ services:
     container_name: wordpress
     hostname: wordpress
     restart: unless-stopped
+    depends_on:
+      - mariadb
     environment:
       - APACHE2_TLD=${APACHE2_TLD-local}
+      - VIRTUAL_HOST=*.${TLD-local}
     volumes:
       - ./data/wordpress-config:/etc/apache2/conf-extra
       - ./data/wordpress-html:/var/www/html
