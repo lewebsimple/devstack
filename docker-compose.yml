@@ -40,18 +40,6 @@ services:
       - ./data/nginx-vhosts:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    hostname: postgres
-    restart: unless-stopped
-    environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - '5432:5432'
-    volumes:
-      - ./data/postgres-data:/var/lib/postgresql/data
-
   wordpress:
     build: ./src/wordpress
     container_name: wordpress
@@ -60,7 +48,9 @@ services:
     depends_on:
       - mariadb
     environment:
-      - APACHE2_TLD=${APACHE2_TLD-local}
+      - APACHE2_UID=${APACHE2_UID-1000}
+      - APACHE2_GID=${APACHE2_GID-1000}
+      - APACHE2_TLD=${TLD-local}
       - VIRTUAL_HOST=*.${TLD-local}
     volumes:
       - ./data/wordpress-config:/etc/apache2/conf-extra
